@@ -13,28 +13,6 @@ class Solution {
     }
 }
 
-fun main() {
-    val sol: Solution = Solution()
-    val nums = intArrayOf(2, 0, 4, 3, 1)
-    val buildNums = intArrayOf(0, 2, 1, 5, 3, 4)
-    val increasingNums = intArrayOf(1, 2, 3, 4, 5)
-    val shuffleNums = intArrayOf(2, 5, 1, 3, 4, 7)
-    val shuffleTarget = 3
-    val target = 6
-
-    println("Two Sums: " + sol.twoSum(nums, target))
-    println("Build Array: " + buildArray(buildNums).contentToString())
-    println("Increasing Array: " + improvedRunningSums(increasingNums).contentToString())
-    println("Shuffling: " + shuffle(shuffleNums, shuffleTarget).contentToString())
-    println(
-        "Shuffling w/ Imporvement: " + shuffleImprove(
-            shuffleNums,
-            shuffleTarget
-        ).contentToString()
-    )
-
-}
-
 //Better Solution
 fun twoSum(nums: IntArray, target: Int): IntArray {
 
@@ -127,4 +105,66 @@ fun shuffleImprove(nums: IntArray, n: Int): IntArray {
         arr.add(nums[i + n])
     }
     return arr.toIntArray()
+}
+
+
+fun numIdenticalPairs(nums: IntArray): Int {
+    var result = 0
+    for (i in nums.indices) {
+        for (j in nums.indices) {
+            if (nums[i] == nums[j] && i < j) {
+                result++
+
+            }
+        }
+    }
+    return result
+}
+
+/**
+ * Input: nums = [3,2,2,3], val = 3
+ * Output: 2, nums = [2,2,_,_]
+ *
+ * [0,1,2,2,3,0,4,2], val = 2
+ * TODO - REVISIT THIS
+ */
+fun removeElement(nums: IntArray, `val`: Int): Int {
+    var found = 0
+    for (i in nums.indices) {
+        if (`val` != nums[i]) {
+            nums[found] = nums[i]
+            //first 'found' elements should be the result
+            found++
+        }
+    }
+    return found
+}
+
+
+fun main() {
+    val sol: Solution = Solution()
+    val nums = intArrayOf(2, 0, 4, 3, 1)
+    val buildNums = intArrayOf(0, 2, 1, 5, 3, 4)
+    val increasingNums = intArrayOf(1, 2, 3, 4, 5)
+    val shuffleNums = intArrayOf(2, 5, 1, 3, 4, 7)
+    val goodPairNums = intArrayOf(1, 2, 3, 1, 1, 3)
+    val removalNums = intArrayOf(0, 1, 2, 2, 3, 0, 4, 2)
+    val removalTarget = 2
+    val shuffleTarget = 3
+    val target = 6
+
+    println("Two Sums: " + sol.twoSum(nums, target))
+    println("Build Array: " + buildArray(buildNums).contentToString())
+    println("Increasing Array: " + improvedRunningSums(increasingNums).contentToString())
+    println("Shuffling: " + shuffle(shuffleNums, shuffleTarget).contentToString())
+    println(
+        "Shuffling w/ Imporvement: " + shuffleImprove(
+            shuffleNums,
+            shuffleTarget
+        ).contentToString()
+    )
+
+    println("Numbering Identical Pairs: ${numIdenticalPairs(goodPairNums)}")
+
+    println("Removing Numbers: ${removeElement(removalNums, removalTarget)}")
 }
