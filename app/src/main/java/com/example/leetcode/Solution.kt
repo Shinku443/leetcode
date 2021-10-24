@@ -18,11 +18,20 @@ fun main() {
     val nums = intArrayOf(2, 0, 4, 3, 1)
     val buildNums = intArrayOf(0, 2, 1, 5, 3, 4)
     val increasingNums = intArrayOf(1, 2, 3, 4, 5)
+    val shuffleNums = intArrayOf(2, 5, 1, 3, 4, 7)
+    val shuffleTarget = 3
     val target = 6
 
     println("Two Sums: " + sol.twoSum(nums, target))
     println("Build Array: " + buildArray(buildNums).contentToString())
     println("Increasing Array: " + improvedRunningSums(increasingNums).contentToString())
+    println("Shuffling: " + shuffle(shuffleNums, shuffleTarget).contentToString())
+    println(
+        "Shuffling w/ Imporvement: " + shuffleImprove(
+            shuffleNums,
+            shuffleTarget
+        ).contentToString()
+    )
 
 }
 
@@ -90,4 +99,32 @@ fun finalValueAfterOperations(operations: Array<String>): Int {
         }
     }
     return x
+}
+
+/*
+Given the array nums consisting of 2n elements in the form [x1,x2,...,xn,y1,y2,...,yn].
+Return the array in the form [x1,y1,x2,y2,...,xn,yn].
+Input: nums = [2,5,1,3,4,7], n = 3
+Output: [2,3,5,4,1,7]
+Explanation: Since x1=2, x2=5, x3=1, y1=3, y2=4, y3=7 then the answer is [2,3,5,4,1,7].
+ */
+fun shuffle(nums: IntArray, n: Int): IntArray {
+    val arr = IntArray(nums.size)
+    for (i in nums.indices) { //can also do 2 variables and increment with j pointing to n
+        if (i % 2 == 0) {
+            arr[i] = nums[i / 2]
+        } else {
+            arr[i] = nums[n + i / 2]
+        }
+    }
+    return arr
+}
+
+fun shuffleImprove(nums: IntArray, n: Int): IntArray {
+    val arr = mutableListOf<Int>()
+    for (i in 0 until n) {
+        arr.add(nums[i])
+        arr.add(nums[i + n])
+    }
+    return arr.toIntArray()
 }
