@@ -180,9 +180,9 @@ fun isSameTreeImproved(p: TreeNode?, q: TreeNode?): Boolean {
 
 //TODO - COMEBACK FOR THIS TOO
 fun invertTree(root: TreeNode?): TreeNode? {
-    println("NEW INVERSION root: ${root?.`val`}")
+    // println("NEW INVERSION root: ${root?.`val`}")
     if (root == null) {
-        println("root is null")
+        //   println("root is null")
         return null
     }
     invertTree(root.left)
@@ -193,6 +193,26 @@ fun invertTree(root: TreeNode?): TreeNode? {
 
     return root
 }
+
+/// TODO - Just go over all the tree stuff man
+fun treeTravelHelper(root: TreeNode?, list: MutableList<Int>): MutableList<Int> {
+    if (root?.left != null) {
+        treeTravelHelper(root.left, list)
+    }
+    list.add(root!!.`val`)
+    if (root?.right != null) {
+        treeTravelHelper(root.right, list)
+    }
+
+    return list
+}
+
+fun inorderTraversal(root: TreeNode?): List<Int> {
+    val travel: MutableList<Int> = mutableListOf()
+    treeTravelHelper(root, travel)
+    return travel
+}
+
 
 fun main() {
     val nums = intArrayOf(2, 0, 4, 3, 1)
@@ -243,5 +263,6 @@ fun main() {
 
     println("Is Same Tree Improved: ${isSameTreeImproved(pTree, qTree)}")
     println("Inverting Tree: ${invertTree(invertingTree)?.`val`}")
+    println("Traversing Tree: ${inorderTraversal(invertingTree)}")
 }
 
