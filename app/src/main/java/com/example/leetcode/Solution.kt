@@ -1,5 +1,7 @@
 package com.example.leetcode
 
+import java.lang.StringBuilder
+
 class Solution {
     fun test() {
 
@@ -150,100 +152,288 @@ fun permute(nums: IntArray): List<List<Int>> {
 
 }*/
 
-class TreeNode(var `val`: Int) {
-    var left: TreeNode? = null
-    var right: TreeNode? = null
+/**
+ * TWO SUM PART 2 ----
+ *   fun twoSum(numbers: IntArray, target: Int): IntArray {
+
+var left = 0
+var right = numbers.size - 1
+
+while (left <= right) {
+var sum = numbers[left] + numbers[right]
+
+if (sum > target) right--
+else if (sum < target) left++
+else
+return intArrayOf(left + 1, right + 1)
 }
 
-//TODO COME BACK TO THIS
-fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
-    if (p?.`val` == null && q?.`val` == null) {
-        return true
-    }
-    if (p?.`val` != null && q?.`val` == null) {
-        return false
-    }//these can be reduced to just p == null || q == null
-    if (q?.`val` != null && p?.`val` == null) {
-        return false
-    }
-    if (p?.`val` != q?.`val`) {
-        return false
-    }
-    return isSameTree(p?.left, q?.left) && isSameTree(p?.right, q?.right)
+return intArrayOf(left + 1, right + 1)
+}
+ */
+
+fun isPalindrome(x: Int): Boolean {
+    return true
 }
 
-fun isSameTreeImproved(p: TreeNode?, q: TreeNode?): Boolean {
-    if (p === q) return true
-    if (p?.`val` != q?.`val`) return false
-    return isSameTree(p?.left, q?.left) && isSameTree(p?.right, q?.right)
+class ListNode(var `val`: Int) {
+    var next: ListNode? = null
 }
 
-//TODO - COMEBACK FOR THIS TOO
-fun invertTree(root: TreeNode?): TreeNode? {
-    // println("NEW INVERSION root: ${root?.`val`}")
-    if (root == null) {
-        //   println("root is null")
-        return null
+fun mergeTwoLists(l1: ListNode?, l2: ListNode?): ListNode? {
+    var newList: ListNode? = ListNode(0)
+    var tail = newList
+    var node1 = l1
+    var node2 = l2
+    while (node1 != null || node2 != null) {
+        if (node1 == null) {
+            tail?.next = node2; break
+        }
+        if (node2 == null) {
+            tail?.next = node1; break
+        }
+        if (node1.`val` < node2.`val`) {
+            tail?.next = node1
+            node1 = node1?.next
+        } else {
+            tail?.next = node2
+            node2 = node2?.next
+        }
+        tail = tail?.next
     }
-    invertTree(root.left)
-    invertTree(root.right)
-    var tmp: TreeNode? = root.left
-    root.left = root.right
-    root.right = tmp
-
-    return root
+    return newList?.next
 }
 
-/// TODO - Just go over all the tree stuff man
-fun treeTravelHelper(root: TreeNode?, list: MutableList<Int>): MutableList<Int> {
-    if (root?.left != null) {
-        treeTravelHelper(root.left, list)
+//Find element more than n / 2 times
+fun majorityElement(nums: IntArray): Int {
+    var count: HashMap<Int, Int> = hashMapOf()
+    for (num in nums) {
+        if (count.get(num) == null) {
+            count.put(num, 1)
+        } else {
+            var countOfInstance = count.get(num)!! + 1
+            count.put(num, countOfInstance)
+        }
     }
-    list.add(root!!.`val`)
-    if (root?.right != null) {
-        treeTravelHelper(root.right, list)
+    var max: Int = -1
+    var keyFound = -1
+
+    for (num in count) {
+        if (num.value > max) {
+            keyFound = num.key
+            max = num.value
+        }
+    }
+    return keyFound
+
+}
+
+fun singleNumber(nums: IntArray): Int {
+    var count: HashMap<Int, Int> = hashMapOf()
+    for (num in nums) {
+        if (count.get(num) == null) {
+            count.put(num, 1)
+        } else {//faster optimization - remove and then just check for key
+            var countOfInstance = count.get(num)!! + 1
+            count.put(num, countOfInstance)
+        }
+    }
+    for (num in count) {
+        if (num.value == 1) {
+            return num.key
+        }
+    }
+    return -1
+}
+
+/**
+ * 121. Best Time to Buy and Sell Stock
+ */
+fun maxProfit(prices: IntArray): Int {
+
+    var maxProfit = 0
+    for (i in 0.until(prices.size)) {
+        //println("----Buying Price: on day $i with $$buyPrice----")
+        for (j in i.until(prices.size)) {
+            //println("Price of next days: ==$j with $${prices[j]}==")
+            var profit = prices[j] - prices[i]
+            //println("Potential Pricing: $$tmpVal")
+            if (profit > 0 && profit > maxProfit) {
+                maxProfit = profit;
+                //    println("ITS BEING REPLACED!!!!::::: $$profit")
+            }
+        }
+    }
+    return maxProfit
+}
+//Make this better
+
+fun maxProfitImproved(prices: IntArray): Int {
+    var maxProfit = 0
+    var minPrice = Int.MAX_VALUE
+    for (price in prices) {
+        if (price < minPrice) {
+            minPrice = price
+        } else if (price - minPrice > maxProfit) {
+            maxProfit = price - minPrice
+        }
+    }
+    return maxProfit
+
+}
+
+/**
+ * 217. Contains Duplicate
+ * Given an integer array nums,
+ * return true if any value appears
+ * at least twice in the array, and
+ * return false if every element is distinct.
+ */
+fun containsDuplicate(nums: IntArray): Boolean {
+    val map: HashMap<Int, Int> = hashMapOf()
+    for (num in nums) {
+        if (map.containsKey(num)) {
+            return true
+        }
+        map[num] = 1
+    }
+    return false
+}
+
+/**
+ * 205. Isomorphic Strings
+ * Two strings s and t are isomorphic
+ * if the characters in s can be replaced to get t.
+ * All occurrences of a character must
+ * be replaced with another character while
+ * preserving the order of characters.
+ * No two characters may map to the same character,
+ * but a character may map to itself.
+ */
+fun isIsomorphic(s: String, t: String): Boolean {
+    val mapStringOneToStringTwo = hashMapOf<Char, Char>()
+    val mapStringTwoToStringOne = hashMapOf<Char, Char>()
+    for (i in s.indices) {
+        if (!mapStringOneToStringTwo.containsKey(s[i]) && !mapStringTwoToStringOne.containsKey(t[i])) {
+            mapStringOneToStringTwo[s[i]] = t[i]
+            mapStringTwoToStringOne[t[i]] = s[i]
+        } else {
+            if (mapStringOneToStringTwo[s[i]] != t[i] || mapStringTwoToStringOne[t[i]] != s[i]) {
+                return false
+            }
+        }
     }
 
-    return list
+    return true
 }
 
-fun inorderTraversal(root: TreeNode?): List<Int> {
-    val travel: MutableList<Int> = mutableListOf()
-    treeTravelHelper(root, travel)
-    return travel
+/**
+ * 202. Happy Number
+ */
+fun isHappy(n: Int): Boolean {
+    var num = n
+    //n = 19
+    //n[0]*n[0] + n[1] + n[1]
+    var seen: MutableSet<Int> = HashSet()
+    while (num !== 1 && !seen.contains(num)) {
+        seen.add(num)
+        println("NUM::::$num")
+        //  num = getNext(num)
+
+    }
+    return num === 1
 }
 
+fun getNext(n: Int): Int {
+    var totalSum = 0
+    var num = n
+    while (num > 0) {
+        val d = n % 10
+        println("digit: $d")
+        num = n / 10
+        println("num? $num")
+        totalSum += d * d
+    }
+    return totalSum
+}
+
+/**
+ * 1281. Subtract the Product and Sum of Digits of an Integer
+ * Input: n = 234
+ * Output: 15
+ * Explanation:
+ * Product of digits = 2 * 3 * 4 = 24
+ * Sum of digits = 2 + 3 + 4 = 9
+ * Result = 24 - 9 = 15
+ * Example 2:
+ */
+fun subtractProductAndSum(n: Int): Int {
+    var product = 1
+    var sum = 0
+    //var num = n
+    var temp = n
+    println("Num : $n")
+    while (temp > 0) {
+        println("Now num is : $temp")
+        println("Mod.... : ${temp % 10}")
+        product *= temp % 10
+        sum += temp % 10
+        temp /= 10
+    }
+    return product - sum
+
+}
+
+/**
+ * 1528. Shuffle String
+ */
+fun restoreString(s: String, indices: IntArray): String {
+    val sb = StringBuilder(s)
+    println("taking : ${sb.toString()} with indices: ${indices.toString()}")
+    for ((index, i) in indices.withIndex()) {
+        println("index: $index and i: $i")
+        //println("I: $i : ${s[i]} vs ${s[index]}")
+        sb.setCharAt(i, s[index])
+        //newString[i] = s[i]
+    }
+    return sb.toString()
+}
 
 fun main() {
+    /**
+     * All Variables
+     */
     val nums = intArrayOf(2, 0, 4, 3, 1)
     val buildNums = intArrayOf(0, 2, 1, 5, 3, 4)
     val increasingNums = intArrayOf(1, 2, 3, 4, 5)
     val shuffleNums = intArrayOf(2, 5, 1, 3, 4, 7)
     val goodPairNums = intArrayOf(1, 2, 3, 1, 1, 3)
     val removalNums = intArrayOf(0, 1, 2, 2, 3, 0, 4, 2)
+    val buyPrices = intArrayOf(7, 1, 5, 3, 6, 4)
+    val buyPricesTwo = intArrayOf(7, 6, 4, 3, 1)
     val removalTarget = 2
     val shuffleTarget = 3
     val target = 6
-    //Tree Area
-    val pTree = TreeNode(1)
-    pTree.left = TreeNode(2)
-    //pTree.right = TreeNode(3)
-    pTree.right = null
-    val qTree = TreeNode(1)
-    qTree.left = TreeNode(2)
-    //qTree.right = TreeNode(3)
-    qTree.right = null
-    //Invert Tree
-    val invertingTree = TreeNode(4)
-    val invertLeft = TreeNode(2)
-    invertingTree.left = invertLeft
-    invertLeft.left = TreeNode(1)
-    invertLeft.right = TreeNode(3)
-    val invertRight = TreeNode(7)
-    invertingTree.right = invertRight
-    invertRight.left = TreeNode(6)
-    invertRight.right = TreeNode(9)
+    val isoStringOne = "egg"
+    val isoStringTwo = "add"
+    val shuffleString = "codeleet"
+    val shuffleStringIndex = intArrayOf(4, 5, 6, 7, 0, 2, 1, 3)
 
+    val majorityElementNums = intArrayOf(3, 3, 4)
+
+    val happyNum = 19
+    val digitsOfIntNum = 234
+
+    val listOne: ListNode? = ListNode(1)
+    listOne?.next = ListNode(2)
+    listOne?.next?.next = ListNode(4)
+
+    val listTwo: ListNode? = ListNode(1)
+    listTwo?.next = ListNode(3)
+    listTwo?.next?.next = ListNode(4)
+    /**
+     * Printing Out Functions
+     */
     println("Two Sums: " + twoSum(nums, target))
     println("Build Array: " + buildArray(buildNums).contentToString())
     println("Increasing Array: " + improvedRunningSums(increasingNums).contentToString())
@@ -259,10 +449,49 @@ fun main() {
 
     println("Removing Numbers: ${removeElement(removalNums, removalTarget)}")
 
-    println("Is Same Tree: ${isSameTree(pTree, qTree)}")
 
-    println("Is Same Tree Improved: ${isSameTreeImproved(pTree, qTree)}")
-    println("Inverting Tree: ${invertTree(invertingTree)?.`val`}")
-    println("Traversing Tree: ${inorderTraversal(invertingTree)}")
+    var nodes: ListNode? = mergeTwoLists(listOne, listTwo)
+    println("Merging list::")
+    for (n in 0 until 6) {
+        println("Order:: ${nodes?.`val`}")
+        nodes = nodes?.next
+    }
+
+    println("Majority Element: ${majorityElement(majorityElementNums)}")
+    println("Max Profit: ${maxProfit(buyPrices)}")
+    println("------SEPARATING------\n\n\n")
+    println("Max Profit (Not valid): ${maxProfit(buyPricesTwo)}")
+    println("------IMPROVING------\n\n\n")
+    println("Max Profit: ${maxProfitImproved(buyPrices)}")
+    println("------SEPARATING------\n\n\n")
+    println("Max Profit (Not valid): ${maxProfitImproved(buyPricesTwo)}")
+
+    println(
+        "Are the strings $isoStringOne and $isoStringTwo isomorphic? : ${
+            isIsomorphic(
+                isoStringOne,
+                isoStringTwo
+            )
+        }"
+    )
+
+    println("Is this number $happyNum a happy num? :: ${isHappy(happyNum)}")
+
+    println(
+        "Subtracting product and sum of digits of n: $digitsOfIntNum :: ${
+            subtractProductAndSum(
+                digitsOfIntNum
+            )
+        }"
+    )
+
+    println(
+        "Shuffling string: $shuffleString -> ${
+            restoreString(
+                shuffleString,
+                shuffleStringIndex
+            )
+        }"
+    )
 }
 
