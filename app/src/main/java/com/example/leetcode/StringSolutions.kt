@@ -1,6 +1,7 @@
 package com.example.leetcode
 
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.get as get1
 
@@ -74,10 +75,161 @@ fun frequencySortImproved(s: String): String {
         .joinToString("") { it.first.toString().repeat(it.second) }
 }
 
+/**
+ * MEDIUM
+ * 347. Top K Frequent Elements
+ * Given an integer array nums and an integer k,
+ * return the k most frequent elements.
+ * You may return the answer in any order.
+ */
+fun topKFrequent(nums: IntArray, k: Int): IntArray {
+    val hashMap = HashMap<Int, Int>()
+    nums.forEach {
+        hashMap[it] = hashMap.getOrDefault(it, 0) + 1
+    }
+    val priorityQueue =
+        PriorityQueue<Int> { n1, n2 -> hashMap[n2]!! - hashMap[n1]!! } //sorting order
+    hashMap.keys.forEach {
+        priorityQueue.add(it)
+    }
+    var counter = k
+    var index = 0
+    val arrayToReturn = IntArray(k)
+    while (!priorityQueue.isEmpty() && counter > 0) {
+        arrayToReturn[index++] = priorityQueue.remove()
+        counter--
+    }
+    return arrayToReturn
+}
+
+/**
+ * MEDIUM
+ * 215. Kth Largest Element in an Array
+ */
+fun findKthLargest(nums: IntArray, k: Int): Int {
+    val hashMap = HashMap<Int, Int>()
+    nums.forEach {
+        hashMap[it] = hashMap.getOrDefault(it, 0) + 1
+    }
+    val priorityQueue =
+        PriorityQueue<Int>(Collections.reverseOrder()) //sorting order
+    hashMap.keys.forEach {
+        priorityQueue.add(it)
+    }
+    var ele = -1
+    val list: ArrayList<Int> = ArrayList(nums.size)
+    while (!priorityQueue.isEmpty()) {
+        val num = priorityQueue.remove()
+        val count = hashMap[num] ?: 0
+        for (i in 0 until count) {
+            list.add(num)
+        }
+    }
+    println("List: $list")
+    for (i in 0 until k) {
+        ele = list[i]
+    }
+    return ele
+}
+
+/**
+ * EASY
+ * 1636. Sort Array by Increasing Frequency
+ */
+fun frequencySort(nums: IntArray): IntArray {
+    val hashMap = HashMap<Int, Int>()
+    nums.forEach {
+        hashMap[it] = hashMap.getOrDefault(it, 0) + 1
+    }
+    hashMap.toSortedMap()
+    var index = 0
+    val arrayToReturn = IntArray(nums.size)
+
+    return arrayToReturn
+}
+
+/**
+ * 1805. Number of Different Integers in a String
+ */
+fun numDifferentIntegers(word: String): Int {
+    var count = 0
+    var foundDig = false
+    var map: HashMap<String, Int> = HashMap<String, Int>()
+    var newString: StringBuilder = StringBuilder()
+    val result = buildString {
+        word.forEach {
+            println("dig:: $it")
+            if (it.isDigit()) {
+                foundDig = true
+                append(it)
+                append(' ')
+            } else {
+                foundDig = false
+
+            }
+        }
+    }
+    println("Result: $result")
+    return count
+}
+
+/**
+ *Stop gninnipS My sdroW!
+ */
+fun spinWords(sentence: String): String {
+    var tmp = sentence.split(' ').toMutableList()
+
+    for (i in tmp.indices) {
+        if(tmp[i].length >= 5 ) {
+            tmp[i] = tmp[i].reversed()
+        }
+        println("i:: $i and val: $i")
+    }
+    return tmp.joinToString(" ")
+}
 fun main() {
+    println("Spin words: ${spinWords("Hey fellow warriors")}")
     val stringToPassForUniq = "leetcode"
     val stringForFrequency = "tree"
-    println("First Uniq Char of string: $stringToPassForUniq is: ${firstUniqChar(stringToPassForUniq)}")
+    val stringForDiffIntegers = "a123bc34d8ef34"
+    val intArrayForFreq = intArrayOf(1, 1, 1, 2, 2, 3)
+    val intArrayForKth = intArrayOf(3, 2, 3, 1, 2, 4, 5, 5, 6)
+    val freqNum = 2
+    val freqNumForK = 4
+    println(
+        "First Uniq Char of string: $stringToPassForUniq is: ${
+            firstUniqChar(
+                stringToPassForUniq
+            )
+        }"
+    )
     println("Frequency sort string: $stringForFrequency is: ${frequencySort(stringForFrequency)}")
+    println(
+        "Frequency of frequency to check: $freqNum is: ${
+            topKFrequent(
+                intArrayForFreq,
+                freqNum
+            )
+        }"
+    )
+
+    println(
+        "Finding kth: $freqNumForK of: ${
+            findKthLargest(
+                intArrayForKth,
+                freqNumForK
+            )
+        }"
+    )
+
+    println("Frequency sort: ${frequencySort(intArrayForFreq).contentToString()}")
+
+    println(
+        "Number of different integers in string: $stringForDiffIntegers : ${
+            numDifferentIntegers(
+                stringForDiffIntegers
+            )
+        }"
+    )
 
 }

@@ -1,7 +1,5 @@
 package com.example.leetcode
 
-import java.lang.StringBuilder
-
 class Solution {
     fun test() {
 
@@ -399,6 +397,99 @@ fun restoreString(s: String, indices: IntArray): String {
     return sb.toString()
 }
 
+/**
+------ STARTING STUDY PLAN ALGO 1 ------
+ */
+
+/**
+ * 704. Binary Search
+ */
+fun search(nums: IntArray, target: Int): Int {
+    for (num in nums.withIndex()) {
+        if (num.value == target) {
+            return num.index
+        }
+    }
+    return -1
+}
+
+/**
+ * 278. First Bad Version
+ */
+fun firstBadVersion(n: Int): Int {
+    return binarySearchTree(0, n)
+}
+
+
+fun binarySearchTree(lower: Int, upper: Int): Int {
+    val mid = lower + ((upper - lower) / 2)
+    val isBad = false//isBadVersion(mid.toInt())
+    if (lower >= upper) return upper //we've exhausted it all so we're at the top
+
+    return if (isBad)
+        binarySearchTree(lower, mid)
+    else
+        binarySearchTree(mid + 1, upper)
+}
+
+
+/**
+ * 35. Search Insert Position
+ */
+
+fun searchInsert(nums: IntArray, target: Int): Int {
+    for ((index, value) in nums.withIndex()) { //iterate through
+        if (value >= target) return index //if we find the target return index
+    }
+    return nums.size
+    //kotlin cheat - return nums.binarySearch(target)
+}
+
+/**
+ * 977. Squares of a Sorted Array - supposed to be
+ * two pointers so we make it like that
+ */
+fun sortedSquares(nums: IntArray): IntArray {
+var newArray = IntArray(nums.size)
+    for(num in nums.withIndex()){
+        newArray[num.index] = num.value * num.value
+    }
+    return newArray.sortedArray()
+}
+
+fun sortedSquaresWithTwoPointers(nums:IntArray): IntArray {
+    var result = IntArray(nums.size)
+    var start = 0
+    var end = nums.size-1
+    for(i in nums.size -1 downTo 0){
+        if (kotlin.math.abs(nums[start]) > kotlin.math.abs(nums[end])) {
+            result[i] = nums[start] * nums[start]
+            start++
+        } else {
+            result[i] = nums[end] * nums[end]
+            end--
+        }
+    }
+return result
+
+}
+
+/**
+ * 26. Remove Duplicates from Sorted Array
+ */
+fun removeDuplicates(nums: IntArray): Int {
+    var found = hashMapOf<Int, Int>()
+    for(i in nums.indices){
+        if(found[i]!! > 0){
+            found[i] = found[i]!! + 1
+        }else{
+            found[i] = 1
+            nums[i] = nums[i]
+        }
+    }
+    return -1
+}
+
 fun main() {
     /**
      * All Variables
@@ -411,6 +502,7 @@ fun main() {
     val removalNums = intArrayOf(0, 1, 2, 2, 3, 0, 4, 2)
     val buyPrices = intArrayOf(7, 1, 5, 3, 6, 4)
     val buyPricesTwo = intArrayOf(7, 6, 4, 3, 1)
+    val binarySearchNums = intArrayOf(-1, 0, 3, 5, 9, 12)
     val removalTarget = 2
     val shuffleTarget = 3
     val target = 6
@@ -423,6 +515,7 @@ fun main() {
 
     val happyNum = 19
     val digitsOfIntNum = 234
+    val binarySearchNumTarget = 9
 
     val listOne: ListNode? = ListNode(1)
     listOne?.next = ListNode(2)
@@ -493,5 +586,7 @@ fun main() {
             )
         }"
     )
+
+    println("Binary search: ${search(binarySearchNums, binarySearchNumTarget)}")
 }
 
